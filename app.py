@@ -1,50 +1,114 @@
 import streamlit as st
-import requests
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-import main_functions
+# Load the bike usage and weather data files
+bike_df = pd.read_csv('times_square_rental_data.csv')
+weather_df = pd.read_csv('times_square_weather_forecast.csv')
 
-my_keys = main_functions.read_from_file("api_key.json")
-my_weather_api_key = my_keys["weather_key"]
+# Convert date and time to datetime and round to the nearest hour
+bike_df['datetime'] = pd.to_datetime(bike_df['date'] + ' ' + bike_df['time']).dt.round('H')
+weather_df['datetime'] = pd.to_datetime(weather_df['date'] + ' ' + weather_df['time']).dt.round('H')
 
-st.title("Data Analysis of Weather and Bike Usage in NYC Times Square")
-st.header("API Data")
+# Grouping the bike data and weather data by hour
+bike_agg_df = bike_df.groupby('datetime').agg({
+    'bikes_rented': 'sum',
+    'bikes_returned': 'sum',
+    'num_bikes_available': 'mean',
+    'num_docks_available': 'mean'
+}).reset_index()
 
-category= st.selectbox("Choose an API", options=["","Weather", "Bike Usage"])
+weather_agg_df = weather_df.groupby('datetime').agg({
+    'temperature': 'mean',
+    'humidity': 'mean',
+    'windSpeed': 'mean',
+    'precipitationProbability': 'mean'
+}).reset_index()
 
-if category == "Weather":
-    api_url = "https://api.tomorrow.io/v4/weather/forecast"
-    params = {
-        "location": "40.7580,-73.9855",  # Latitude and Longitude for Times Square, NY
-        "apikey": my_weather_api_key,  # Your API key
-        "units": "metric",
-    }
-    # Make the GET request
-    response = requests.get(api_url, params=params).json()
+# Merging both datasets on the rounded datetime column
+merged_df = pd.merge(bike_agg_df, weather_agg_df, on='datetime', how='inner')
 
-    if response:
-        try:
-            # Extracting the relevant data from the 'minutely' timeline
-            hourly_data = response['timelines']['hourly']  # Adjust if needed
+# Streamlit Dashboard
+st.title("Bike Usage and Weather Dashboard")
 
-            # Loop through the first few timepoints for demonstration
-            st.subheader("Hourly Weather Data")
-            for hour in hourly_data[:24]:  # Limit to the first 24 hours for brevity
-                time = hour["time"]
-                temperature = hour["values"]["temperature"]
-                humidity = hour["values"]["humidity"]
-                wind_speed = hour["values"]["windSpeed"]
-                precipitationProbability = hour["values"]["precipitationProbability"]
+st.markdown(
+    "This dashboard provides insights into **bike usage** and **weather conditions** in Times Square. Use the tabs below to explore the data through different visualizations.")
 
-                # Displaying the weather information
-                st.write(f"Time: {time}")
-                st.write(f"Temperature: {temperature} °C")
-                st.write(f"Humidity: {humidity} %")
-                st.write(f"Wind Speed: {wind_speed} m/s")
-                st.write(f"Precipitation: {precipitationProbability} %")
-                st.write("---")
+# Tabs for different types of visualizations
+scatterPlot, linePlot, heatmap, tables = st.tabs(["Scatter Plot", "Line Plot", "Heat Map", "Raw Data"])
 
-        except KeyError:
-            st.error("Error: Unable to fetch data. Check the API response structure.")
-        else:
-            st.error("No data returned from the API.")
+# Scatter Plot Tab
+with scatterPlot:
+    st.header("Scatter Plot: Weather vs Bike Usage")
+    st.markdown("Explore how weather conditions affect bike rentals and returns.")
 
+    # Select weather parameter for scatter plot
+    weather_parameter = st.selectbox("Choose a weather parameter to compare with bike usage:",
+                                     options=["temperature", "humidity", "windSpeed"])
+
+    fig1 = px.scatter(merged_df,
+                      x=weather_parameter,
+                      y=["bikes_rented", "bikes_returned"],
+                      labels={"value": "Bike Rentals/Returns", weather_parameter: weather_parameter.capitalize()})
+
+    st.plotly_chart(fig1)
+
+# Line Plot Tab
+with linePlot:
+    st.header("Line Plot: Bike Usage and Weather Over Time")
+    st.markdown("Analyze bike usage trends over time along with selected weather conditions.")
+
+    # Select weather parameter for line plot
+    weather_parameter = st.selectbox("Choose a weather parameter to compare over time:",
+                                     options=["temperature", "humidity", "windSpeed"])
+
+    # Create the figure for line plot
+    fig3 = go.Figure()
+
+    # Add bike rental and return data
+    fig3.add_trace(go.Scatter(x=merged_df['datetime'], y=merged_df['bikes_rented'],
+                              mode='lines', name='Bikes Rented'))
+    fig3.add_trace(go.Scatter(x=merged_df['datetime'], y=merged_df['bikes_returned'],
+                              mode='lines', name='Bikes Returned'))
+
+    # Add weather data on secondary y-axis
+    fig3.add_trace(go.Scatter(x=merged_df['datetime'], y=merged_df[weather_parameter],
+                              mode='lines', name=weather_parameter.capitalize(), yaxis="y2"))
+
+    # Configure layout for two y-axes
+    fig3.update_layout(
+        xaxis_title="Time",
+        yaxis_title="Number of Bikes",
+        yaxis2=dict(title=weather_parameter.capitalize(), overlaying='y', side='right'),
+        hovermode="x unified"
+    )
+
+    st.plotly_chart(fig3)
+
+# Heatmap Tab
+with heatmap:
+    st.header("Correlation Heatmap: Bike Usage vs Weather")
+    st.markdown("Discover correlations between bike usage and weather parameters.")
+
+    # Calculate correlation matrix
+    corr_df = merged_df[['bikes_rented', 'bikes_returned', 'temperature', 'humidity', 'windSpeed']]
+    corr_matrix = corr_df.corr()
+
+    # Display heatmap
+    fig, ax = plt.subplots()
+    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
+    st.pyplot(fig)
+
+# Raw Data and Statistics Tab
+with tables:
+    st.header("Raw Data and Descriptive Statistics")
+    st.markdown("Explore the raw data used in this analysis, along with summary statistics.")
+
+    st.write("### Raw Data")
+    st.dataframe(merged_df)
+
+    st.write("### Descriptive Statistics")
+    st.dataframe(merged_df.describe())
