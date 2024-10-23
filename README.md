@@ -1,5 +1,16 @@
 # Times Square Bike-Sharing Data Analysis
 
+## Live Dashboard
+
+Explore the interactive dashboard for this analysis [here](https://bikeusage.streamlit.app/).
+
+The dashboard provides insights into bike usage patterns, including metrics like:
+- Date and time of usage
+- Temperature, humidity, wind speed
+- Bikes rented and returned
+
+Feel free to interact with the visualizations and explore the data.
+
 **Description**:  
 This project explores the impact of weather conditions on bike-sharing usage in Times Square, NYC. Using data collected from the Citi Bike API and Tomorrow.io weather API, the project aims to uncover patterns and correlations between weather factors (such as temperature, precipitation, wind, and humidity) and the number of daily bike rentals and returns. The data was collected over four consecutive days at 5-minute and 10-minute intervals, providing a detailed, real-time snapshot of bike usage and weather conditions.
 
