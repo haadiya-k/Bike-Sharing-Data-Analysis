@@ -40,7 +40,7 @@ st.markdown(
 # Tabs for different types of visualizations
 scatterPlot, linePlot, heatmap, tables = st.tabs(["Scatter Plot", "Line Plot", "Heat Map", "Raw Data"])
 
-# Scatter Plot Tab
+#Scatter Plot Tab
 with scatterPlot:
     st.header("Scatter Plot: Weather vs Bike Usage")
     st.markdown("Explore how weather conditions affect bike rentals and returns.")
@@ -56,7 +56,7 @@ with scatterPlot:
 
     st.plotly_chart(fig1)
 
-# Line Plot Tab
+#Line Plot Tab
 with linePlot:
     st.header("Line Plot: Bike Usage and Weather Over Time")
     st.markdown("Analyze bike usage trends over time along with selected weather conditions.")
@@ -88,7 +88,7 @@ with linePlot:
 
     st.plotly_chart(fig3)
 
-# Heatmap Tab
+#Heatmap Tab
 with heatmap:
     st.header("Correlation Heatmap: Bike Usage vs Weather")
     st.markdown("Discover correlations between bike usage and weather parameters.")
@@ -102,7 +102,7 @@ with heatmap:
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
     st.pyplot(fig)
 
-# Raw Data and Statistics Tab
+#Raw Data and Statistics Tab
 with tables:
     st.header("Raw Data and Descriptive Statistics")
     st.markdown("Explore the raw data used in this analysis, along with summary statistics.")
