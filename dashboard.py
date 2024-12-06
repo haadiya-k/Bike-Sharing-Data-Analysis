@@ -36,10 +36,10 @@ if selected_page == "Home":
     influence bike rentals and returns in Times Square. 
 
     ### Features:
+    - **Data**: View and interact with each dataset.
     - **Scatter Plots**: Explore the relationship between bike usage and weather parameters such as temperature, humidity, and wind speed.
     - **Line Plots**: Analyze trends in bike usage and weather conditions over time.
     - **Heat Maps**: Discover correlations between different variables.
-    - **Raw Data**: View and interact with each dataset.
     - **Sampling**: Explore stratified or random sampling.
     - **Models**: Train and evaluate machine learning models (Random Forest and Linear Regression) to predict bike usage.
 
