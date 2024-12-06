@@ -1,81 +1,156 @@
-# Times Square Bike-Sharing Data Analysis
+# Times Square Bike-Sharing Data Analysis Dashboard
 
 ## Live Dashboard
 
-Explore the interactive dashboard for this analysis [here](https://bikeusage.streamlit.app/).
+Explore the interactive dashboard [here](https://bikeusage.streamlit.app/).
 
-The dashboard provides insights into bike usage patterns, including metrics like:
-- Date and time of usage
-- Temperature, humidity, wind speed
-- Bikes rented and returned
+This dashboard provides insights into the impact of weather conditions on bike-sharing usage in Times Square, NYC. It combines interactive visualizations and machine learning models to uncover patterns and trends in bike rentals and returns under varying weather conditions.
 
-Feel free to interact with the visualizations and explore the data.
+---
 
-**Description**:  
-This project explores the impact of weather conditions on bike-sharing usage in Times Square, NYC. Using data collected from the Citi Bike API and Tomorrow.io weather API, the project aims to uncover patterns and correlations between weather factors (such as temperature, precipitation, wind, and humidity) and the number of daily bike rentals and returns. The data was collected over four consecutive days at 5-minute and 10-minute intervals, providing a detailed, real-time snapshot of bike usage and weather conditions.
+## Features
 
-**Key Features**:
-- Python scripts for data collection from Citi Bike and Tomorrow.io APIs.
-- Real-time data gathering for bike availability and weather conditions.
-- Future analysis will include data visualization, trend analysis, and predictive modeling.
+### 1. **Home Page**
+- Provides an overview of the dashboard’s purpose and features.
+- Explains how to navigate between sections using the sidebar.
 
-**Technologies**: PyCharm, Google Colab, Python, APIs, Pandas, Matplotlib, Seaborne
+### 2. **Data**
+- Overview of the preprocessed bike-sharing and weather data.
+- Description of key columns and preprocessing steps.
 
-## Visualisations
+### 3. **Scatter Plots**
+- Visualize the relationship between bike-sharing metrics (`bikes_rented`, `bikes_returned`) and weather parameters (`temperature`, `humidity`, `windSpeed`).
+- Key observations for each weather parameter.
 
-### Scatter Plot: Bikes Rented and Bikes Returned vs Temperature
+### 4. **Line Plots**
+- Track bike rentals and returns over time alongside weather conditions.
+- Analyze trends and patterns in usage.
 
-This plot visualizes the relationship between temperature and the number of bikes rented and returned in Times Square. It highlights trends where bike usage generally increases with warmer temperatures, but there are fluctuations in the data that require further exploration.
+### 5. **Heat Maps**
+- Correlation matrix between bike-sharing metrics and weather parameters.
+- Identify strong relationships and dependencies.
 
-![Scatter Plot](https://github.com/user-attachments/assets/60ef6330-7406-4ac6-a7f6-13feb22aec7f)
+### 6. **Sampling**
+- **Stratified Sampling**: View data grouped by specific conditions, e.g. daytime and nighttime.
+- **Random Sampling**: Analyze a random subset of the data to identify trends.
 
-**Key Insights:**
-- Positive Correlation: Warmer temperatures strongly correlate with increased bike-sharing activity.
-- Ideal Biking Conditions: The temperature range of 18°C-22°C is the sweet spot for peak usage.
-- Outliers: Certain peaks, particularly at 12°C and 22°C, may represent special events or anomalies that require further investigation.
+### 7. **Models**
+- **Model Training and Evaluation**:
+  - Random Forest Regressor
+  - Linear Regression
+- **Residual Plots**: Understand model behavior by visualizing residuals.
+- **Predicted vs. Actual Plots**: Compare predicted values with actual observations.
+- **Feature Importance**: Highlight key features impacting bike-sharing activity.
+- **McNemar's Test**: Compare the correctness of predictions between models.
 
-### Scatter Plot: Bikes Rented and Bikes Returned vs Wind Speed
+---
 
-This plot highlights how varying wind speeds may influence bike rentals and returns. While lower wind speeds seem to correspond with a range of rental and return values, higher wind speeds show a decrease in bike activity.
+## Data
 
-![wind speed scatter plot](https://github.com/user-attachments/assets/9c8b698b-8a51-49ab-b72f-ad754c93e27b)
+### Sources:
+- **Citi Bike API**: Provides bike-sharing data (e.g., bikes rented, bikes returned).
+- **Tomorrow.io Weather API**: Supplies weather data (e.g., temperature, humidity, wind speed).
 
-**Key Insights:**
-- Moderate Humidity (55%-70%) is Ideal: This range sees the most bike usage.
-- High Humidity Deters Rentals: As humidity rises above 80%, fewer bikes are rented.
-- Outliers Need Further Exploration: The spike in rentals at low humidity and the gap between rentals and returns at high humidity may point to specific events or external factors.
+### Key Columns:
+- `temperature`: Weather temperature in degrees Celsius.
+- `humidity`: Humidity percentage.
+- `windSpeed`: Wind speed in km/h.
+- `bikes_rented`: Number of bikes rented in an hour.
+- `bikes_returned`: Number of bikes returned in an hour.
 
+### Preprocessing Steps:
+1. Combined bike-sharing and weather data.
+2. Synchronized timestamps and rounded them to 10 minute intervals.
+3. Aggregated data by calculating sums or averages.
+4. Handled missing values and outliers to improve model accuracy.
 
-### Scatter Plot: Bikes Rented and Bikes Returned vs Humidity
+---
 
-This plot explores the relationship between humidity and bike usage. We can observe how changes in humidity might impact the number of bikes rented or returned, with bike activity generally decreasing at higher humidity levels.
+## Scatter Plots
 
-![humidity scatter plot](https://github.com/user-attachments/assets/3a9b5c0e-4f8d-48a4-9d16-967ebc782a93)
+### Insights:
+- **Temperature**: Bike rentals and returns increase with higher temperatures, indicating a strong positive correlation.
+- **Humidity**: Higher humidity levels correspond to fewer bike rentals and returns, but the relationship is less direct than temperature.
+- **Wind Speed**: Stronger winds discourage bike usage, showing a noticeable decline in rentals and returns.
 
-**Key Insights:**
-- Calmer Winds are Ideal for Biking: Wind speeds between 1 and 3 kph seem to provide the most favorable conditions for bike rentals and returns.
-- Stronger Winds Discourage Rentals: As wind speeds exceed 4 kph, fewer people rent bikes, possibly due to discomfort or safety concerns related to biking in windy conditions.
-- Outliers Require Further Investigation: The spike in rentals at low wind speeds (~1 kph) suggests that specific events or favorable weather conditions may have contributed to the increase.
+---
 
-### Time Series Plot: Bikes Rented and Returned Over Time with Temperature
+## Line Plots
 
-This time series plot tracks the number of bikes rented and returned over time alongside the temperature. It offers insights into peak hours of usage and how temperature variations might influence bike-sharing activity.
+### Features:
+- Visualize trends in bike-sharing metrics alongside weather parameters over time.
+- Identify patterns, such as higher bike usage during warmer periods.
 
-![time series](https://github.com/user-attachments/assets/4cc5b430-5a43-4d76-bccd-68e71f36bd3a)
+---
 
-**Key Insights:**
-- Bike Usage Peaks at Warmer Temperatures: The number of bikes rented and returned rises sharply as temperatures increase, indicating that warmer weather conditions are ideal for biking.
-- Cold Weather Reduces Bike Rentals: There is a noticeable drop in bike usage during colder temperature periods, suggesting that colder weather discourages people from renting or returning bikes.
-- Bikes Rented and Returned Show Similar Patterns: The peaks and troughs of bike rentals and returns often align, indicating that most users rent and return bikes within a short period or single outing.
-- Outliers Require Further Investigation: Some spikes in bike returns don’t align with the temperature trends, suggesting possible external factors such as special events or local conditions influencing bike returns.
+## Heat Maps
 
-### Heat Map
+### Features:
+- Displays correlations between bike-sharing metrics and weather parameters.
+- Helps identify relationships such as:
+  - **Strong Positive Correlation**: Temperature with bike rentals and returns.
+  - **Negative Correlation**: Humidity with bike rentals and returns.
 
-![Heat Map](https://github.com/user-attachments/assets/57d477a2-b12a-4343-889d-8f6117c39472)
+---
 
-**Key Insights:**
-- Positive Correlation Between Rentals and Returns: The correlation between bikes rented and bikes returned is strong (0.80), suggesting a clear pattern of users returning bikes soon after renting.
-- Temperature's Significant Impact: There is a strong positive correlation between temperature and both bikes rented (0.74) and bikes returned (0.64), indicating that warmer temperatures significantly increase bike usage.
-- Humidity Negatively Affects Bike Usage: A moderate negative correlation exists between humidity and both bikes rented (-0.58) and bikes returned (-0.52). This suggests that higher humidity levels may deter users from renting bikes.
-- Wind Speed's Mixed Influence: Wind speed shows a moderate positive correlation with temperature (0.65) and a weaker correlation with bikes rented (0.52). This implies that mild winds, usually associated with warmer weather, might encourage biking, but stronger winds might reduce rentals.
+## Sampling
+
+### Stratified Sampling
+- Groups data by specific conditions (e.g., daytime vs nighttime).
+- Provides a general view of patterns in the dataset.
+  
+### Random Sampling
+- Analyzes a random 10% subset of the data.
+- Provides a general view of patterns in the dataset.
+
+---
+
+## Models
+
+### Model Training
+- Uses `Random Forest Regressor` and `Linear Regression` to predict:
+  - `bikes_rented`
+  - `bikes_returned`
+
+### Model Evaluation Metrics:
+### 1. **Mean Absolute Error (MAE)**
+- The average absolute difference between the predicted and actual values.
+- Indicates how far off predictions are from actual values, on average.
+- Lower values mean better accuracy.
+
+### 2. **Mean Squared Error (MSE)**
+- The average of the squared differences between predicted and actual values.
+- Penalizes larger errors more heavily than smaller ones.
+- Useful for identifying significant deviations.
+
+### 3. **Root Mean Squared Error (RMSE)**
+- The square root of the Mean Squared Error.
+- Provides an error metric in the same units as the target variable.
+- Balances penalizing large errors with interpretability.
+
+### 4. **R² (Coefficient of Determination)**
+- Measures how well the model explains the variance in the target variable.
+- Values range from 0 to 1, where higher values indicate better performance.
+- An R² of 1 means the model explains all the variance in the data.
+
+| Metric               | Bikes Rented (RF) | Bikes Rented (LR) | Bikes Returned (RF) | Bikes Returned (LR) |
+|-----------------------|-------------------|-------------------|----------------------|----------------------|
+| **MAE**              | 3.21              | 5.45              | 2.87                 | 4.91                 |
+| **MSE**              | 12.34             | 18.87             | 11.12                | 16.44                |
+| **RMSE**             | 3.51              | 4.34              | 3.33                 | 4.05                 |
+| **R²**               | 0.73              | 0.51              | 0.62                 | 0.44                 |
+
+### Visualizations:
+1. **Residual Plots**:
+   - Random Forest residuals are more evenly spread, indicating better performance.
+   - Linear Regression residuals show trends, suggesting underfitting.
+2. **Predicted vs. Actual Plots**:
+   - Random Forest predictions align closely with actual values.
+   - Linear Regression predictions deviate, especially at extreme values.
+3. **Feature Importance**:
+   - Temperature is the most influential predictor for both rentals and returns.
+   - Wind speed has a larger impact on returns than rentals.
+4. **McNemar's Test**:
+   - Compares the correctness of predictions between Random Forest and Linear Regression to identify statistical differences.
+
 
