@@ -52,7 +52,8 @@ if selected_page == "Home":
 
 # Scatter Plot
 if selected_page == "Scatter Plots":
-    st.header("Scatter Plots: Bike Usage vs Weather")
+    st.title("Scatter Plots")
+    st.header("Bike Usage vs Weather")
     st.markdown("Explore how weather conditions affect bike rentals and returns.")
 
     weather_parameter = st.selectbox("Choose a weather parameter to compare with bike usage:",
@@ -91,7 +92,8 @@ if selected_page == "Scatter Plots":
 
 # Line Plot
 if selected_page == "Line Plots":
-    st.header("Line Plot: Bike Usage and Weather Over Time")
+    st.title("Line Plots")
+    st.header("Bike Usage and Weather Over Time")
     st.markdown("Analyze trends in bike usage and weather conditions over time.")
 
     weather_parameter = st.selectbox("Choose a weather parameter to visualize over time:",
@@ -141,6 +143,7 @@ if selected_page == "Line Plots":
 
 # Heatmap Tab
 if selected_page == "Heat Maps":
+    st.title("Heat Map")
     st.header("Correlation Heatmap: Bike Usage vs Weather")
     st.markdown("Discover correlations between bike usage and weather parameters.")
 
@@ -152,6 +155,7 @@ if selected_page == "Heat Maps":
 
 # Raw Data and Statistics
 if selected_page == "Data":
+    st.title("Data")
     st.header("Raw Data, Preprocessed Data, and Descriptive Statistics")
     st.markdown("Explore the raw data and the preprocessed data used in this analysis, along with summary statistics.")
 
@@ -168,6 +172,7 @@ if selected_page == "Data":
 
 # Sampling
 if selected_page == "Sampling":
+    st.title("Sampling Techniques")
     st.header("Sampling: Stratified vs Random Sampling")
     st.markdown("""
     Explore the effects of different sampling techniques on the data. This page shows **stratified** and **random** sampling methods applied to the dataset, with scatter plots for visualizing the samples.
@@ -268,6 +273,7 @@ if selected_page == "Sampling":
 
 # Model
 if selected_page == "Models":
+    st.title("Models")
     st.header("Model Training and Evaluation")
     st.markdown("""
     To predict bike usage, specifically the number of bikes rented and returned during given time intervals, 
